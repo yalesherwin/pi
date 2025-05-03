@@ -148,10 +148,10 @@
         <input type="text" id="product" placeholder="e.g., Galvanized Steel" required>
 
         <label for="thickness">Enter Thickness (mm)</label>
-        <input type="number" id="thickness" placeholder="Enter thickness" required>
+        <input type="text" id="thickness" placeholder="e.g., 1mm, 2mm" required>
 
         <label for="width">Enter Width (mm)</label>
-        <input type="number" id="width" placeholder="Enter width" required>
+        <input type="text" id="width" placeholder="e.g., 1000mm, 1200mm" required>
 
         <label for="pricePerTon">Price per Ton (USD)</label>
         <input type="number" id="pricePerTon" placeholder="Enter price per ton" required>
@@ -192,8 +192,8 @@
 
     function addProduct() {
       const productName = document.getElementById("product").value;
-      const thickness = parseFloat(document.getElementById("thickness").value);
-      const width = parseFloat(document.getElementById("width").value);
+      const thickness = document.getElementById("thickness").value;
+      const width = document.getElementById("width").value;
       const pricePerTon = parseFloat(document.getElementById("pricePerTon").value);
       const tonnage = parseFloat(document.getElementById("tonnage").value);
 
@@ -263,3 +263,4 @@
   </script>
 </body>
 </html>
+
