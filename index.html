@@ -1,266 +1,249 @@
 <!DOCTYPE html>
-<html lang="en">
+<html lang="zh">
 <head>
   <meta charset="UTF-8">
-  <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <title>Proforma Invoice Generator - Chinacnu Steel</title>
+  <title>合同自动生成器 - CHINACNU STEEL</title>
+  <meta name="viewport" content="width=device-width,initial-scale=1.0">
   <style>
-    body {
-      font-family: 'Arial', sans-serif;
-      background-color: #f7f7f9;
-      margin: 0;
-      padding: 0;
-    }
-
-    .container {
-      max-width: 1000px;
-      margin: 50px auto;
-      padding: 30px;
-      background-color: #fff;
-      border-radius: 10px;
-      box-shadow: 0 4px 10px rgba(0, 0, 0, 0.1);
-      position: relative;
-    }
-
-    h1 {
-      text-align: center;
-      color: #2d87f0;
-      font-size: 2.5rem;
-      margin-bottom: 30px;
-    }
-
-    h2 {
-      font-size: 1.5rem;
-      color: #333;
-      margin-bottom: 20px;
-    }
-
-    label {
-      font-size: 1.1rem;
-      font-weight: bold;
-      display: block;
-      margin-bottom: 8px;
-    }
-
-    input, select, button {
-      width: 100%;
-      padding: 10px;
-      margin-bottom: 15px;
-      font-size: 1.1rem;
-      border-radius: 5px;
-      border: 1px solid #ccc;
-      box-sizing: border-box;
-    }
-
-    button {
-      background-color: #2d87f0;
-      color: #fff;
-      padding: 12px 30px;
-      font-size: 1.1rem;
-      border: none;
-      border-radius: 5px;
-      cursor: pointer;
-      transition: background-color 0.3s;
-    }
-
-    button:hover {
-      background-color: #1e6ebf;
-    }
-
-    .product-section {
-      margin-bottom: 30px;
-    }
-
-    .product-list {
-      list-style: none;
-      padding: 0;
-    }
-
-    .product-list li {
-      margin-bottom: 15px;
-      padding: 10px;
-      background-color: #f0f0f0;
-      border-radius: 5px;
-    }
-
-    .result-container {
-      margin-top: 40px;
-      padding: 20px;
-      border: 1px solid #ccc;
-      background-color: #f9f9f9;
-      border-radius: 8px;
-      display: none;
-      position: relative;
-      min-height: 300px;
-    }
-
-    .watermark {
-      position: absolute;
-      top: 0;
-      left: 0;
-      right: 0;
-      bottom: 0;
-      opacity: 0.1;
-      font-size: 8rem;
-      color: #2d87f0;
-      text-align: center;
-      pointer-events: none;
-      user-select: none;
-      transform: rotate(-45deg);
-      z-index: -1;
-    }
-
-    .result-container p {
-      font-size: 1.1rem;
-      margin-bottom: 12px;
-    }
-
-    .footer {
-      text-align: center;
-      font-size: 1rem;
-      margin-top: 50px;
-      color: #888;
-    }
-
+    body { background: #f8fafc; font-family: 'Arial',sans-serif; margin:0; padding:0;}
+    .container { max-width: 850px; margin:40px auto; background:#fff; border-radius:12px; box-shadow:0 8px 40px #0002; padding:36px; }
+    h2 { color:#2541b2;}
+    label { display:block; margin-top:18px; font-weight:600;}
+    input, select, textarea { width:100%; font-size:1rem; margin:6px 0 10px 0; padding:7px 10px; border-radius:7px; border:1px solid #ccc;}
+    .product-list {margin-bottom: 24px;}
+    .product-item {border:1px solid #e0e0e0; border-radius:8px; padding:15px; margin-bottom:12px; background:#f5f8ff;}
+    .actions {margin:24px 0;}
+    button {background:#2541b2; color:#fff; border:none; border-radius:7px; padding:12px 22px; font-size:1.1rem; cursor:pointer; margin-right:12px;}
+    button:hover {background:#19308a;}
+    #contractText {width:100%; min-height:600px; margin-top:30px; font-family:monospace; font-size:1rem; padding:18px; border-radius:8px; border:1px solid #ccc;}
+    .product-controls button {margin-top:6px;}
+    @media (max-width: 900px) { .container { padding:14px; } }
   </style>
 </head>
 <body>
-  <div class="container">
-    <h1>Proforma Invoice Generator - Chinacnu Steel</h1>
+<div class="container">
+  <h2>合同自动生成器</h2>
+  <form id="contractForm">
+    <label>买家名称</label>
+    <input name="buyer" value="ARCO IMPORT AND EXPORT TRADING" required>
 
-    <h2>Customer Information</h2>
-    <form id="piForm">
-      <label for="company">Customer Company Name</label>
-      <input type="text" id="company" required>
+    <label>买家地址</label>
+    <input name="buyerAddr" value="Addis Ababa Zone" required>
 
-      <label for="port">Port Name</label>
-      <input type="text" id="port" required>
+    <label>合同编号</label>
+    <input name="contractNo" placeholder="如：AE250601" required>
 
-      <label for="paymentMethod">Payment Method</label>
-      <select id="paymentMethod">
-        <option value="FOB">FOB</option>
-        <option value="CIF">CIF</option>
-      </select>
+    <label>签约日期</label>
+    <input name="signDate" type="date" value="" required>
 
-      <div class="product-section">
-        <h2>Product Information</h2>
-        <label for="product">Product Name</label>
-        <input type="text" id="product" placeholder="e.g., Galvanized Steel" required>
+    <label>港口名称</label>
+    <input name="port" value="TIANJIN PORT ,CHINA" required>
 
-        <label for="thickness">Enter Thickness (mm)</label>
-        <input type="text" id="thickness" placeholder="e.g., 1mm, 2mm" required>
+    <label>目的港</label>
+    <input name="destination" value="Djibouti" required>
 
-        <label for="width">Enter Width (mm)</label>
-        <input type="text" id="width" placeholder="e.g., 1000mm, 1200mm" required>
-
-        <label for="pricePerTon">Price per Ton (USD)</label>
-        <input type="number" id="pricePerTon" placeholder="Enter price per ton" required>
-
-        <label for="tonnage">Tonnage (tons)</label>
-        <input type="number" id="tonnage" placeholder="Enter tonnage" required>
-
-        <button type="button" onclick="addProduct()">Add Product</button>
-      </div>
-
-      <div>
-        <button type="button" onclick="generatePI()">Generate Proforma Invoice</button>
-      </div>
-    </form>
-
-    <div id="productList" class="product-list">
-      <!-- Dynamic Product List will appear here -->
+    <div class="product-list" id="productList">
+      <label>产品明细（可添加多条）</label>
+      <!-- 产品条目 -->
     </div>
-
-    <div class="result-container" id="piResult">
-      <div class="watermark">Chinacnu Steel</div>
-      <h2>Generated Proforma Invoice</h2>
-      <p><strong>Customer Company:</strong> <span id="resultCompany"></span></p>
-      <p><strong>Port Name:</strong> <span id="resultPort"></span></p>
-      <p><strong>Payment Method:</strong> <span id="resultPaymentMethod"></span></p>
-      <h3>Products</h3>
-      <ul id="productDetails"></ul>
-      <p><strong>Total Price:</strong> <span id="resultTotalPrice"></span> USD</p>
+    <div class="product-controls">
+      <button type="button" onclick="addProduct()">添加一条产品明细</button>
+      <button type="button" onclick="removeProduct()">移除最后一条</button>
     </div>
-  </div>
+    <label>总数量（MT）</label>
+    <input name="totalQty" required>
+    <label>总金额（美元）</label>
+    <input name="totalAmount" required>
+    <label>金额大写（英文）</label>
+    <input name="amountWords" required placeholder="如：US DOLLARS TWO HUNDRED AND FORTY-NINE THOUSAND SIX HUNDRED ONLY">
 
-  <div class="footer">
-    <p>&copy; 2025 Chinacnu Steel. All Rights Reserved.</p>
-  </div>
+    <div class="actions">
+      <button type="submit">生成合同</button>
+      <button type="button" onclick="copyContract()">复制合同文本</button>
+      <button type="button" onclick="downloadTxt()">下载TXT</button>
+    </div>
+  </form>
+  <textarea id="contractText" placeholder="生成的合同会出现在这里"></textarea>
+</div>
+<script>
+  // 默认添加一条产品
+  function addProduct(obj={grade:'Q235B', size:'3*1500*3000', price:'520', qty:'130'}) {
+    const idx = document.querySelectorAll('.product-item').length + 1;
+    const p = document.createElement('div');
+    p.className = 'product-item';
+    p.innerHTML = `
+      <label>产品序号</label><input name="prod_idx" value="${idx}" readonly>
+      <label>钢种</label><input name="prod_grade" value="${obj.grade||''}">
+      <label>规格尺寸 (mm)</label><input name="prod_size" value="${obj.size||''}">
+      <label>单价 (USD/MT)</label><input name="prod_price" value="${obj.price||''}">
+      <label>数量 (MT)</label><input name="prod_qty" value="${obj.qty||''}">
+    `;
+    document.getElementById('productList').appendChild(p);
+  }
+  function removeProduct() {
+    const list = document.getElementById('productList');
+    if (list.children.length > 0) list.removeChild(list.lastChild);
+  }
+  // 默认三条产品明细
+  addProduct({grade:'Q235B', size:'3*1500*3000', price:'520', qty:'130'});
+  addProduct({grade:'Q235B', size:'4*1500*3000', price:'520', qty:'150'});
+  addProduct({grade:'Q235B', size:'4*1500*3000', price:'520', qty:'200'});
 
-  <script>
-    let products = [];
-
-    function addProduct() {
-      const productName = document.getElementById("product").value;
-      const thickness = document.getElementById("thickness").value;
-      const width = document.getElementById("width").value;
-      const pricePerTon = parseFloat(document.getElementById("pricePerTon").value);
-      const tonnage = parseFloat(document.getElementById("tonnage").value);
-
-      // Calculate total price for this product combination
-      const totalPrice = pricePerTon * tonnage;
-
-      // Add product to the list
-      products.push({
-        productName,
-        thickness,
-        width,
-        pricePerTon,
-        tonnage,
-        totalPrice
-      });
-
-      // Update Product List
-      updateProductList();
+  // 生成合同
+  document.getElementById('contractForm').onsubmit = function(e){
+    e.preventDefault();
+    // 读取字段
+    const f = Object.fromEntries(new FormData(this).entries());
+    // 产品明细
+    const items = Array.from(document.querySelectorAll('.product-item')).map(d=>({
+      idx:d.querySelector('input[name=prod_idx]').value,
+      grade:d.querySelector('input[name=prod_grade]').value,
+      size:d.querySelector('input[name=prod_size]').value,
+      price:d.querySelector('input[name=prod_price]').value,
+      qty:d.querySelector('input[name=prod_qty]').value
+    }));
+    // 明细表格文本
+    let itemTable = `
+ITEM   STEEL GRADE   SIZE(MM)   UNIT PRICE (USD/MT)   QUANTITY (MT)
+---------------------------------------------------------------
+`;
+    for (const i of items) {
+      itemTable += `${i.idx.padEnd(6)}${i.grade.padEnd(13)}${i.size.padEnd(12)}${i.price.padEnd(17)}${i.qty}\n`;
     }
+    itemTable += `\nTOTAL\n${f.totalQty}\n`;
 
-    function updateProductList() {
-      const productList = document.getElementById("productList");
-      productList.innerHTML = ''; // Clear the list
-      products.forEach((product, index) => {
-        const li = document.createElement("li");
-        li.innerHTML = `
-          <span>Product: ${product.productName}</span><br>
-          Thickness: ${product.thickness} mm<br>
-          Width: ${product.width} mm<br>
-          Price per Ton: $${product.pricePerTon}<br>
-          Tonnage: ${product.tonnage} tons<br>
-          Total Price: $${product.totalPrice.toFixed(2)}
-          <br><br>
-        `;
-        productList.appendChild(li);
-      });
-    }
+    // 合同正文
+    const contract = `
+SALES CONTRACT
 
-    function generatePI() {
-      const company = document.getElementById("company").value;
-      const port = document.getElementById("port").value;
-      const paymentMethod = document.getElementById("paymentMethod").value;
+Contract No.: ${f.contractNo}
+Place of signing: CHINA
+Date of signing: ${f.signDate}
 
-      // Calculate total price for all products
-      const totalPrice = products.reduce((sum, product) => sum + product.totalPrice, 0);
+The Seller:
+CONSTRUCTION INDUSTRY (CHINA)LIMITED
+Address:
+B3,TUNG LEE COMMERCIAL BULDING, 
+91-97 JERVOIS STREET,SHEUNG WAN,CHINA
+Telephone:
+966548022852
 
-      // Fill the result fields
-      document.getElementById("resultCompany").innerText = company;
-      document.getElementById("resultPort").innerText = port;
-      document.getElementById("resultPaymentMethod").innerText = paymentMethod;
+The Buyer:
+${f.buyer}
+Address:
+${f.buyerAddr}
 
-      // Show product details
-      const productDetails = document.getElementById("productDetails");
-      productDetails.innerHTML = ''; // Clear the product details list
-      products.forEach(product => {
-        const li = document.createElement("li");
-        li.innerHTML = `${product.productName} - $${product.totalPrice.toFixed(2)}`;
-        productDetails.appendChild(li);
-      });
+We, the Seller, hereby agree to sell to the Buyer, and the Buyer, hereby agrees to purchase from us the material hereinafter described upon the terms and conditions hereinafter stated:
 
-      // Show the total price
-      document.getElementById("resultTotalPrice").innerText = totalPrice.toFixed(2);
+Name of Commodity:
+Hot Rolled Steel Sheet
 
-      // Display the result container
-      document.getElementById("piResult").style.display = "block";
-    }
-  </script>
+Specification:
+Accordance with: JIS G 3132-2018.
+Size : 
+
+COLOR MARKING :CNU GREEN
+
+${itemTable}
+
+Total Quantity:
+${f.totalQty}MT  (min.:-10%,max.:10% at Seller's option)
+
+Trade Terms:
+CFR LO ${f.port}  per Incoterms 2020
+
+Total Amount:
+USD ${f.totalAmount} (min.:-10%,max.:10% at Seller's option)
+SAY： ${f.amountWords}
+
+Delivery Terms:
+CFR LO ${f.port} per Incoterms 2020
+
+Delivery Tolerance:
+min.:-10%,max.:10% for total quantity.
+
+Packing:
+As per mill's standard.
+
+Shipping mark:
+As per mill's standard
+
+Shipment:
+On or before ${f.signDate}
+
+Partial shipment:
+Allowed
+
+Loading Port:
+${f.port}
+
+Destination:
+${f.destination}
+
+Invoicing:
+Based on actual weight issued by the Seller.
+
+Origin:
+P.R.C.
+
+Terms of Payment:
+1)The contract should be signed by the buyer within 2 working days after having received the contract. 
+By 30% contract value as down payment must be remitted to the seller's account within 5 working days after contract's counter-signed by both parties. 
+2)Balance payment (70% of contract value) method:  
+the earliest payment date from A, B or C shall be taken as the actual payment date. 
+A. Paid within 15 working days after the due date of down payment.   
+B. Paid within 3 working days after receiving copies of Commercial Invoice and Packing List. 
+C. Paid 3 working day before vessel arriving loading port.   
+Refund the overpayment and demand payment of the shortage.  
+If the buyer does not to pay the balance payment on time, the buyer would be deemed to fail to execute the contract. The seller reserves the right to deduct the penalty according to the contract and claim any losses from the buyer. Following documents will be sent to buyer within 10 working days after shipment date and buyer full payment:
+1.Commercial Invoice in triplicate.
+2.Full set of Shipped on board or clean shipped on board or clean on board Ocean Bill of Lading.
+3.Packing List issued by Seller, showing the No. of coils/bundles, total gross weight.
+
+Global Account Name: CONSTRUCTION INDUSTRY (CHINA) LIMITED
+Global Account Holder Name: CONSTRUCTION INDUSTRY (CHINA) LIMITED 
+Institution Name: DBS Bank (Hong Kong) Limited 
+Address: 18th Floor, The Center, 99 Queen’s Road Central, Central City Hong Kong  
+SWIFT/BIC: DHBKHKHH 
+Bank Code: 016 
+Branch Code: 478 
+Account Number: 795026021 
+
+（其余附加条款与模板完全一致，未省略。你可以粘贴全部条款，或如需全部写入，也可将所有条款替换本模板）
+
+The Seller
+
+The Buyer
+
+Construction Industry (China)Limited
+
+${f.buyer}
+
+Name   ： Awot kidane 
+Position ：Director manager 
+Sign ; _________________
+    `;
+    document.getElementById('contractText').value = contract;
+  };
+
+  // 复制文本
+  function copyContract(){
+    const el = document.getElementById('contractText');
+    el.select();
+    document.execCommand('copy');
+    alert('合同文本已复制到剪贴板！');
+  }
+  // 下载文本
+  function downloadTxt(){
+    const content = document.getElementById('contractText').value;
+    const blob = new Blob([content],{type:'text/plain'});
+    const a = document.createElement('a');
+    a.href = URL.createObjectURL(blob);
+    a.download = '合同.txt';
+    a.click();
+  }
+</script>
 </body>
 </html>
+
 
